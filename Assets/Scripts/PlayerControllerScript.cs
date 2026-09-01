@@ -12,14 +12,16 @@ public class PlayerControllerScript : MonoBehaviour
     [SerializeField] private LayerMask _groundMask;
     [SerializeField] private float _jumpHeight = 6;
     [SerializeField] private bool _isGrounded;
+    [SerializeField] private PlayerAnimator _animatorScript;
     private Vector3 _moveVector;
     private float _upDownRange = 90;
     private Vector3 _velocity = new Vector3(0, -2, 0);
     private Vector2 _moveVector2;
     private float _rotationY;
+    public bool IsGround => _isGrounded;
     void Start()
     {
-       
+        _animatorScript = GetComponent<PlayerAnimator>();
     }
 
     // Update is called once per frame
@@ -36,6 +38,9 @@ public class PlayerControllerScript : MonoBehaviour
     private void ApplyPhysics()
     {
         _isGrounded = Physics.CheckSphere(_groundCheck.position, _groundDistance, _groundMask);
+        _animatorScript.SetIsGround(_isGrounded);
+        _animatorScript.SetFallSpeed(_velocity.y);
+        
         if (_isGrounded && _velocity.y < 0)
         {
             _velocity.y = -2f; 
@@ -53,6 +58,13 @@ public class PlayerControllerScript : MonoBehaviour
         Vector3 moveVector = transform.forward * _moveVector2.y + transform.right * _moveVector2.x;
         moveVector *= _speed;
         _moveVector = moveVector;
+        if (_moveVector == Vector3.zero)
+        {
+            _animatorScript.SetSpeed(0);
+        } else
+        {
+            _animatorScript.SetSpeed(_speed);
+        }
     }
     public void Rotate(Vector2 rotationVector)
     {

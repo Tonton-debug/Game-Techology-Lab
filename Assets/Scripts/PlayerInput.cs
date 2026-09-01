@@ -12,11 +12,20 @@ public class PlayerInput : MonoBehaviour
     }
     public void LockPrees(InputAction.CallbackContext callbackContext)
     {
-        if (!callbackContext.started) return;
-        _locked = !_locked;
-        Cursor.lockState = !_locked? CursorLockMode.Locked:CursorLockMode.None;
-        if(_locked)
+      //  if (!callbackContext.started) return;
+       // _locked = !_locked;
+     //   UpdateLook();
+    }
+    private void UpdateLook()
+    {
+        Cursor.lockState = !_locked ? CursorLockMode.Locked : CursorLockMode.None;
+        if (_locked)
             _contorller.Move(Vector2.zero);
+    }
+    public void SetLoock(bool loock)
+    {
+        _locked = loock;
+        UpdateLook();
     }
     public void WASDPress(InputAction.CallbackContext callbackContext)
     {
